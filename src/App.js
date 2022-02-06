@@ -10,6 +10,7 @@ function App() {
   const [accounts, setAccounts] = useState([]);
   const [balance, setBalance] = useState(0.0);
   const [value, setValue] = useState("");
+  const [message, setMessage] = useState("");
 
   const lottery = new Lottery();
 
@@ -36,15 +37,22 @@ function App() {
       return;
     }
 
-    lottery.enterLottery(accounts[0], value);
+    setMessage("Your transaction is being processed...");
+    await lottery.enterLottery(accounts[0], value);
+    setMessage("You are in the Lottery!");
+
+    setTimeout(() => {
+      setMessage("");
+    }, 2000);
     setValue("")
   }
 
   return (
     <div className="App">
       <h1>Lottery DApp</h1>
-        <p>The Manager of this Lottery contract is <strong>{manager}</strong></p>
-        <p>There are currently <strong>{players.length}</strong> players, with a total lottery pot of <strong>{balance}</strong> ether.</p>
+      <p>The Manager of this Lottery contract is <strong>{manager}</strong></p>
+      <p>There are currently <strong>{players.length}</strong> players, with a total lottery pot of <strong>{balance}</strong> ether.</p>
+      <hr/>
       <div>
         <h2>May the Force be with you 🖖🏾</h2>
         <form onSubmit={formSubmitHandler}>
@@ -55,6 +63,8 @@ function App() {
           <button> Enter Lottery </button>
         </form>
       </div>
+      <hr/>
+      <h1>{message}</h1>
     </div>
   );
 }
