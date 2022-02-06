@@ -1,22 +1,22 @@
 import './App.css';
 
-import lottery from './contract_utils/lottery';
+import Lottery from './contract_utils/lottery';
 import React, {useState, useEffect} from 'react';
 
 
 function App() {
   const [manager, setManager] = useState("");
 
-
+  const lottery = new Lottery();
 
   useEffect(() => {
     const loadLotteryState = async () => {
-      const contractManager = await lottery.methods.m_manager().call();
+      const contractManager = await lottery.getManager();
       setManager(contractManager);
     }
     
     loadLotteryState();
-  }, []);
+  });
 
   return (
     <div className="App">
