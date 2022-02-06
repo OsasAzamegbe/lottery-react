@@ -12,16 +12,25 @@ class Lottery {
     this.#lottery = new web3.eth.Contract(this.#CONTRACT_ABI, this.#CONTRACT_ADDRESS);
   }
 
+  async getAccounts() {
+    return await web3.eth.getAccounts();
+  }
+
   async getManager() {
     return await this.#lottery.methods.m_manager().call();
   }
 
   async getBalance() {
-    return await web3.eth.getBalance(this.#lottery.options.address);
+    const balanceInWei = await web3.eth.getBalance(this.#lottery.options.address);
+    return web3.utils.fromWei(balanceInWei, 'ether');
   }
 
   async getPlayers() {
     return await this.#lottery.methods.getPlayers().call();
+  }
+
+  async enterLottery(account, etherValue) {
+    await this.#lottery.methods.enterLottery().send({ from: account,value: web3.utils.toWei(etherValue, 'ether') });
   }
 }
 
