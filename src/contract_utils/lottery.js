@@ -32,6 +32,10 @@ class Lottery {
   async enterLottery(account, etherValue) {
     await this.#lottery.methods.enterLottery().send({ from: account,value: web3.utils.toWei(etherValue, 'ether') });
   }
+
+  async pickWinner(account) {
+    await this.#lottery.methods.pickWinner().send({ from: account });
+  }
 }
 
 export default Lottery;

@@ -47,6 +47,22 @@ function App() {
     setValue("")
   }
 
+  const pickWinnerHandler = async (event) => {
+    event.preventDefault();
+    if (accounts[0] !== manager) {
+      alert("Whoa Whoa Whoa! You must be the lottery manger to be able to pick a winner.");
+      return;
+    }
+
+    setMessage("A lottery winner is being selected...");
+    await lottery.pickWinner(accounts[0]);
+    setMessage("A winner has been picked!");
+
+    setTimeout(() => {
+      setMessage("");
+    }, 2000);
+  }
+
   return (
     <div className="App">
       <h1>Lottery DApp</h1>
@@ -63,6 +79,8 @@ function App() {
           <button> Enter Lottery </button>
         </form>
       </div>
+      <hr/>
+      <button onClick={pickWinnerHandler}>Pick Winner</button>
       <hr/>
       <h1>{message}</h1>
     </div>
