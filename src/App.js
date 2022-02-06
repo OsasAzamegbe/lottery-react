@@ -7,7 +7,9 @@ import React, {useState, useEffect} from 'react';
 function App() {
   const [manager, setManager] = useState("");
   const [players, setPlayers] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [balance, setBalance] = useState(0.0);
+  const [value, setValue] = useState("");
 
   const lottery = new Lottery();
 
@@ -16,16 +18,43 @@ function App() {
       setManager(await lottery.getManager());
       setPlayers(await lottery.getPlayers());
       setBalance(await lottery.getBalance());
+      setAccounts(await lottery.getAccounts());
     }
     
     loadLotteryState();
   });
 
+  //Event Handlers
+  const valueOnChangeHandler = (event) => {
+    setValue(event.target.value);
+  }
+
+  const formSubmitHandler = async (event) => {
+    event.preventDefault();
+    if(!accounts.length) {
+      alert("Metamask account not connected. Please refresh Browser.");
+      return;
+    }
+
+    lottery.enterLottery(accounts[0], value);
+    setValue("")
+  }
+
   return (
     <div className="App">
       <h1>Lottery DApp</h1>
-      <p>The Manager of this Lottery contract is <strong>{manager}</strong></p>
-      <p>There are currently <strong>{players.length}</strong> players, with a total lottery pot of <strong>{balance}</strong> ether.</p>
+        <p>The Manager of this Lottery contract is <strong>{manager}</strong></p>
+        <p>There are currently <strong>{players.length}</strong> players, with a total lottery pot of <strong>{balance}</strong> ether.</p>
+      <div>
+        <h2>May the Force be with you 🖖🏾</h2>
+        <form onSubmit={formSubmitHandler}>
+          <div>
+            <label>Amount of Ether </label>
+            <input value={value} onChange={valueOnChangeHandler} type='number' step='0.000000001' min='0.01' required />
+          </div>
+          <button> Enter Lottery </button>
+        </form>
+      </div>
     </div>
   );
 }
